@@ -2,12 +2,22 @@
 
 require_once 'vendor/autoload.php';
 
-
-use leoshtika\libs\DB;
 use leoshtika\libs\Pagination;
+use leoshtika\libs\DB;
+use leoshtika\libs\UserFaker;
 
+// ---------- MySQL -------------------
 // DB::instance()->connectMysql('localhost', 'db', 'root', '');
-DB::instance()->connectSqlite('data/db.sqlite');
+// ------------------------------------
+
+// ---------- SQLite ------------------
+// Create a new sqlite db if not exists and load some dummy data
+$sqliteFile = 'demo.sqlite';
+if (!file_exists($sqliteFile)) {
+	UserFaker::create($sqliteFile);
+}
+DB::instance()->connectSqlite($sqliteFile);
+// ------------------------------------
 
 $countHandler = DB::instance()->dbh()->prepare('SELECT count(*) AS count FROM user');
 $countHandler->execute();
@@ -26,8 +36,6 @@ $users = $sth->fetchAll(PDO::FETCH_OBJ);
 //    $pagination->getRecordsPerPage(),
 //    $pagination->offset()
 //));
-
-
 
 ?>
 <!DOCTYPE html>
@@ -61,30 +69,4 @@ $users = $sth->fetchAll(PDO::FETCH_OBJ);
     <?php echo $pagination->nav(); ?>
 </body>
 </html>
-
-<?php
-
-
-
-
-
-
-
-
-//$faker = Faker\Factory::create();
-//try {
-//    
-//    for ($i=1; $i<=123; $i++) {
-//        $sth = DB::instance()->dbh()->prepare('INSERT INTO user (name, email, address, phone) VALUES (:name, :email, :address, :phone)');
-//        $sth->bindParam(':name', $faker->name, PDO::PARAM_STR);
-//        $sth->bindParam(':email', $faker->email, PDO::PARAM_STR);
-//        $sth->bindParam(':address', $faker->address, PDO::PARAM_STR);
-//        $sth->bindParam(':phone', $faker->phoneNumber, PDO::PARAM_STR);
-//        $sth->execute();
-//    }
-//    
-//} catch (PDOException $ex) {
-//	echo 'There is a problem with your query';
-//	Logger::add($ex->getMessage(), Logger::LEVEL_WARNING);
-//}
 
