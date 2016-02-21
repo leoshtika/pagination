@@ -15,17 +15,15 @@ UserFaker::create($sqliteFile, 120);
 $dbh = Sqlite::connect($sqliteFile);
 
 // Get the total number of records
-$countSth = $dbh->prepare('SELECT count(*) FROM user');
-$countSth->execute();
-$totalRecords = $countSth->fetch(PDO::FETCH_COLUMN);
+$totalRecords = $dbh->query('SELECT count(*) FROM user')->fetch(PDO::FETCH_COLUMN);
 
 // Instantiate the Pagination
 $pagination = new Pagination($_GET['page'], $totalRecords, 10);
 
 // Get records using the pagination
 $sth = $dbh->prepare('SELECT * FROM user LIMIT :offset, :records');
-$sth->bindValue(':records', $pagination->getRecordsPerPage(), PDO::PARAM_INT);
 $sth->bindValue(':offset', $pagination->offset(), PDO::PARAM_INT);
+$sth->bindValue(':records', $pagination->getRecordsPerPage(), PDO::PARAM_INT);
 $sth->execute();
 $users = $sth->fetchAll(PDO::FETCH_OBJ);
 
