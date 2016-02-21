@@ -2,7 +2,7 @@
     "name": "leoshtika/pagination",
     "description": "The simpliest PHP pagination class",
     "require": {
-        "leoshtika/database": "dev-master",
+        "leoshtika/database": "~1.1",
         "leoshtika/logger": "~1.0"
     },
     "require-dev": {
